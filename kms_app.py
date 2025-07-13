@@ -542,6 +542,7 @@ def handle_head_circumference_for_age():
 st.title("📈 Program Kurva Pertumbuhan Anak WHO")
 st.write("Aplikasi untuk memvisualisasikan pertumbuhan anak berdasarkan standar WHO.")
 
+st.sidebar.title("Posyandu Mawar Karang Baru Utara")
 menu_pilihan = st.sidebar.selectbox(
     "Pilih Jenis Kurva:",
     (
