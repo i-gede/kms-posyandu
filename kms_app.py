@@ -156,6 +156,7 @@ def get_interpretation_hcfa(hc_anak, z_scores_at_age):
 def plot_wfa(kelamin, umur_anak, berat_anak):
     st.subheader("1. Berat Badan menurut Umur (WfA)")
     try:
+        st.info(f"Keterangan: {interpretasi}")
         settings = get_settings_wfa(umur_anak)
         gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
         
@@ -253,6 +254,7 @@ def plot_wfa(kelamin, umur_anak, berat_anak):
 def plot_wfh(kelamin, umur_anak, panjang_anak, berat_anak):
     st.subheader("2. Berat Badan menurut Tinggi/Panjang (WfH/L)")
     try:
+        st.info(f"Keterangan: {interpretasi}")
         settings = get_settings_wfh(umur_anak)
         gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
         
@@ -357,6 +359,7 @@ def plot_bmi(kelamin, umur_anak, tinggi_cm, berat_kg):
 def plot_lhfa(kelamin, umur_anak, panjang_anak):
     st.subheader("4. Panjang/Tinggi Badan menurut Umur (L/H-f-A)")
     try:
+        st.info(f"Keterangan: {interpretasi}")
         settings = get_settings_lhfa(umur_anak)
         gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
         gender_file_key = 'girls' if kelamin == 'P' else 'boys'
@@ -414,6 +417,7 @@ def plot_lhfa(kelamin, umur_anak, panjang_anak):
 def plot_hcfa(kelamin, umur_anak_bulan, hc_anak):
     st.subheader("5. Lingkar Kepala menurut Umur (HCFA)")
     try:
+        st.info(f"Keterangan: {interpretasi}")
         settings = get_settings_hcfa(umur_anak_bulan)
         gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
         gender_file_key = 'girls' if kelamin == 'P' else 'boys'
