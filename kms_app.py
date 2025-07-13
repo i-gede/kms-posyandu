@@ -546,21 +546,21 @@ st.sidebar.title("Posyandu Mawar Karang Baru Utara")
 menu_pilihan = st.sidebar.selectbox(
     "Pilih Jenis Kurva:",
     (
-        "Berat Badan menurut UMUR (WfA)",
-        "Berat Badan menurut TINGGI/PANJANG (WfH/L)",
-        "IMT menurut UMUR (BMI-for-Age)",
-        "Panjang/Tinggi Badan menurut UMUR (L/H-f-A)",
-        "Lingkar Kepala menurut UMUR (HCFA)"
+        "Berat Badan menurut UMUR",
+        "Berat Badan menurut TINGGI/PANJANG",
+        "IMT menurut UMUR",
+        "Panjang/Tinggi Badan menurut UMUR",
+        "Lingkar Kepala menurut UMUR"
     )
 )
 
-if menu_pilihan == "Berat Badan menurut UMUR (WfA)":
+if menu_pilihan == "Berat Badan menurut UMUR":
     handle_weight_for_age()
-elif menu_pilihan == "Berat Badan menurut TINGGI/PANJANG (WfH/L)":
+elif menu_pilihan == "Berat Badan menurut TINGGI/PANJANG":
     handle_weight_for_height()
-elif menu_pilihan == "IMT menurut UMUR (BMI-for-Age)":
+elif menu_pilihan == "IMT menurut UMUR":
     handle_bmi_for_age() 
-elif menu_pilihan == "Panjang/Tinggi Badan menurut UMUR (L/H-f-A)":
+elif menu_pilihan == "Panjang/Tinggi Badan menurut UMUR":
     handle_length_for_age()
-elif menu_pilihan == "Lingkar Kepala menurut UMUR (HCFA)":
+elif menu_pilihan == "Lingkar Kepala menurut UMUR":
     handle_head_circumference_for_age()
