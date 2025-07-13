@@ -190,6 +190,9 @@ def plot_wfa(kelamin, umur_anak, berat_anak):
         
         z_scores_at_age = {col: func(umur_anak) for col, func in poly_funcs.items()}
         interpretasi, warna = get_interpretation_wfa(berat_anak, z_scores_at_age)
+        
+        st.info(f"Hasil Interpretasi WfA: {interpretasi}") # <-- KODE BARU
+        
         props = dict(boxstyle='round', facecolor=warna, alpha=0.8)
         ax.text(0.03, 0.97, f"Interpretasi: {interpretasi}", transform=ax.transAxes, fontsize=12, va='top', bbox=props)
         
