@@ -156,7 +156,6 @@ def get_interpretation_hcfa(hc_anak, z_scores_at_age):
 def plot_wfa(kelamin, umur_anak, berat_anak):
     st.subheader("1. Berat Badan menurut Umur (WfA)")
     try:
-        st.info(f"Keterangan: {interpretasi}")
         settings = get_settings_wfa(umur_anak)
         gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
         
