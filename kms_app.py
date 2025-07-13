@@ -154,7 +154,7 @@ def get_interpretation_hcfa(hc_anak, z_scores_at_age):
 # ==============================================================================
 
 def plot_wfa(kelamin, umur_anak, berat_anak):
-    st.subheader("1. Berat Badan menurut Umur (WfA)")
+    st.subheader("1. Berat Badan menurut Umur")
     try:
         settings = get_settings_wfa(umur_anak)
         gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
@@ -254,9 +254,8 @@ def plot_wfa(kelamin, umur_anak, berat_anak):
         st.error(f"Terjadi error saat membuat grafik WfA: {e}")
 
 def plot_wfh(kelamin, umur_anak, panjang_anak, berat_anak):
-    st.subheader("2. Berat Badan menurut Tinggi/Panjang (WfH/L)")
+    st.subheader("2. Berat Badan menurut Tinggi/Panjang")
     try:
-        st.info(f"Keterangan: {interpretasi}")
         settings = get_settings_wfh(umur_anak)
         gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
         
@@ -284,6 +283,9 @@ def plot_wfh(kelamin, umur_anak, panjang_anak, berat_anak):
         ax.scatter(panjang_anak, berat_anak, marker='*', c='darkviolet', s=250, ec='black', zorder=10, label=f'Data Anak')
         z_scores_at_length = {col: func(panjang_anak) for col, func in poly_funcs.items()}
         interpretasi, warna = get_interpretation_wfh(berat_anak, z_scores_at_length)
+        
+        st.info(f"{interpretasi}") # <-- KODE BARU
+
         props = dict(boxstyle='round', facecolor=warna, alpha=0.8)
         ax.text(0.03, 0.97, f"Status Gizi: {interpretasi}", transform=ax.transAxes, fontsize=12, va='top', bbox=props)
         ax.set_title(judul, pad=20, fontsize=16, color='white', fontweight='bold')
@@ -302,7 +304,7 @@ def plot_wfh(kelamin, umur_anak, panjang_anak, berat_anak):
         st.error(f"Terjadi error saat membuat grafik WfH/L: {e}")
 
 def plot_bmi(kelamin, umur_anak, tinggi_cm, berat_kg):
-    st.subheader("3. IMT menurut Umur (BMI-for-Age)")
+    st.subheader("3. Indeks Massa Tubuh (IMT) menurut Umur")
     try:
         if tinggi_cm == 0:
             st.error("Tinggi badan tidak boleh nol untuk menghitung IMT.")
@@ -341,6 +343,9 @@ def plot_bmi(kelamin, umur_anak, tinggi_cm, berat_kg):
         ax.text(umur_anak + 0.3, bmi_anak, f'{bmi_anak:.2f} kg/m²', fontsize=11, color='darkviolet', va='center')
         z_scores_at_age = {col: func(umur_anak) for col, func in poly_funcs.items()}
         interpretasi, warna = get_interpretation_bmi(bmi_anak, z_scores_at_age)
+        
+        st.info(f"{interpretasi}") # <-- KODE BARU
+        
         props = dict(boxstyle='round', facecolor=warna, alpha=0.8)
         ax.text(0.03, 0.97, f"Status Gizi: {interpretasi}", transform=ax.transAxes, fontsize=12, va='top', bbox=props)
         ax.set_title(judul, pad=20, fontsize=16, color='white', fontweight='bold')
@@ -359,9 +364,8 @@ def plot_bmi(kelamin, umur_anak, tinggi_cm, berat_kg):
         st.error(f"Terjadi error saat membuat grafik BMI: {e}")
 
 def plot_lhfa(kelamin, umur_anak, panjang_anak):
-    st.subheader("4. Panjang/Tinggi Badan menurut Umur (L/H-f-A)")
+    st.subheader("4. Panjang/Tinggi Badan menurut Umur")
     try:
-        st.info(f"Keterangan: {interpretasi}")
         settings = get_settings_lhfa(umur_anak)
         gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
         gender_file_key = 'girls' if kelamin == 'P' else 'boys'
@@ -400,6 +404,9 @@ def plot_lhfa(kelamin, umur_anak, panjang_anak):
         z_scores_at_age['SD_2'] = z_scores_at_age.get('SD2neg')
         z_scores_at_age['SD_3'] = z_scores_at_age.get('SD3neg')
         interpretasi, warna = get_interpretation_lhfa(panjang_anak, z_scores_at_age)
+        
+        st.info(f"{interpretasi}") # <-- KODE BARU
+        
         props = dict(boxstyle='round', facecolor=warna, alpha=0.8)
         ax.text(0.03, 0.97, f"Interpretasi: {interpretasi}", transform=ax.transAxes, fontsize=12, va='top', bbox=props)
         ax.set_title(judul, pad=20, fontsize=16, color='white', fontweight='bold')
@@ -417,9 +424,8 @@ def plot_lhfa(kelamin, umur_anak, panjang_anak):
         st.error(f"Terjadi error saat membuat grafik L/H-f-A: {e}")
 
 def plot_hcfa(kelamin, umur_anak_bulan, hc_anak):
-    st.subheader("5. Lingkar Kepala menurut Umur (HCFA)")
+    st.subheader("5. Lingkar Kepala menurut Umur")
     try:
-        st.info(f"Interpretasi: {interpretasi}")
         settings = get_settings_hcfa(umur_anak_bulan)
         gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
         gender_file_key = 'girls' if kelamin == 'P' else 'boys'
@@ -457,6 +463,9 @@ def plot_hcfa(kelamin, umur_anak_bulan, hc_anak):
         ax.scatter(umur_anak_bulan, hc_anak, marker='*', c='darkviolet', s=250, ec='black', zorder=10, label=f'Data Anak')
         z_scores_at_age = {col: func(umur_anak_bulan) for col, func in poly_funcs.items()}
         interpretasi, warna = get_interpretation_hcfa(hc_anak, z_scores_at_age)
+        
+        st.info(f"{interpretasi}") # <-- KODE BARU
+        
         props = dict(boxstyle='round', facecolor=warna, alpha=0.8)
         ax.text(0.03, 0.97, f"Interpretasi: {interpretasi}", transform=ax.transAxes, fontsize=12, va='top', bbox=props)
         ax.set_title(judul, pad=20, fontsize=16, color='white', fontweight='bold')
