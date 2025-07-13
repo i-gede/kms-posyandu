@@ -154,7 +154,7 @@ def get_interpretation_hcfa(hc_anak, z_scores_at_age):
 # ==============================================================================
 
 def handle_weight_for_age():
-    st.header("Grafik Berat Badan menurut Umur (WfA)")
+    st.header("Berat Badan Menurut Umur")
     
     # Menggantikan get_input_wfa() dengan widget Streamlit
     kelamin = st.radio("Pilih Jenis Kelamin:", ('L', 'P'), format_func=lambda x: 'Laki-laki' if x == 'L' else 'Perempuan', key="wfa_gender")
@@ -162,7 +162,7 @@ def handle_weight_for_age():
     berat_anak = st.number_input("Berat badan anak (kg):", min_value=0.0, value=7.0, step=0.1, key="wfa_weight")
 
     # Logika plot hanya berjalan saat tombol ditekan
-    if st.button("Buat Grafik WfA", key="wfa_button"):
+    if st.button("Tampilkan Kurva", key="wfa_button"):
         try:
             settings = get_settings_wfa(umur_anak)
             gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
@@ -264,7 +264,7 @@ def handle_weight_for_age():
             st.error(f"Terjadi error saat membuat grafik: {e}")
 
 def handle_weight_for_height():
-    st.header("Grafik Berat Badan menurut Tinggi/Panjang Badan (WfH/L)")
+    st.header("Berat Badan Menurut Tinggi/Panjang Badan")
 
     # Menggantikan get_input_wfh()
     kelamin = st.radio("Pilih Jenis Kelamin:", ('L', 'P'), format_func=lambda x: 'Laki-laki' if x == 'L' else 'Perempuan', key="wfh_gender")
@@ -273,7 +273,7 @@ def handle_weight_for_height():
     panjang_anak = st.number_input(f"{prompt_panjang} badan anak (cm):", min_value=45.0, max_value=120.0, value=80.0, step=0.5, key="wfh_height")
     berat_anak = st.number_input("Berat badan anak (kg):", min_value=0.0, value=10.0, step=0.1, key="wfh_weight")
 
-    if st.button("Buat Grafik WfH/L", key="wfh_button"):
+    if st.button("Tampilkan Kurva", key="wfh_button"):
         try:
             settings = get_settings_wfh(umur_anak)
             gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
@@ -332,7 +332,7 @@ def handle_weight_for_height():
 
 
 def handle_bmi_for_age():
-    st.header("Grafik IMT menurut Umur (BMI-for-Age)")
+    st.header("Indeks Massa Tubuh (IMT) Menurut Umur")
 
     # Menggantikan get_input_bmi()
     kelamin = st.radio("Pilih Jenis Kelamin:", ('L', 'P'), format_func=lambda x: 'Laki-laki' if x == 'L' else 'Perempuan', key="bmi_gender")
@@ -340,7 +340,7 @@ def handle_bmi_for_age():
     tinggi_cm = st.number_input("Tinggi/Panjang badan anak (cm):", min_value=0.0, value=85.0, step=0.5, key="bmi_height")
     berat_kg = st.number_input("Berat badan anak (kg):", min_value=0.0, value=12.0, step=0.1, key="bmi_weight")
 
-    if st.button("Buat Grafik IMT", key="bmi_button"):
+    if st.button("Tampilkan Kurva", key="bmi_button"):
         try:
             if tinggi_cm == 0:
                 st.error("Tinggi badan tidak boleh nol.")
@@ -401,14 +401,14 @@ def handle_bmi_for_age():
             st.error(f"Terjadi error saat membuat grafik: {e}")
 
 def handle_length_for_age():
-    st.header("Grafik Panjang/Tinggi Badan menurut Umur (L/H-f-A)")
+    st.header("Panjang/Tinggi Badan Menurut Umur")
 
     # Menggantikan get_input_lhfa()
     kelamin = st.radio("Pilih Jenis Kelamin:", ('L', 'P'), format_func=lambda x: 'Laki-laki' if x == 'L' else 'Perempuan', key="lhfa_gender")
     umur_anak = st.number_input("Umur anak (bulan):", min_value=0.0, max_value=60.0, value=12.0, step=1.0, key="lhfa_age")
     panjang_anak = st.number_input("Panjang/Tinggi badan anak (cm):", min_value=0.0, value=75.0, step=0.5, key="lhfa_height")
 
-    if st.button("Buat Grafik L/H-f-A", key="lhfa_button"):
+    if st.button("Tampilkan Kurva", key="lhfa_button"):
         try:
             settings = get_settings_lhfa(umur_anak)
             gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
@@ -469,14 +469,14 @@ def handle_length_for_age():
             st.error(f"Terjadi error saat membuat grafik: {e}")
 
 def handle_head_circumference_for_age():
-    st.header("Grafik Lingkar Kepala menurut Umur (HCFA)")
+    st.header("Lingkar Kepala Menurut Umur")
 
     # Menggantikan get_input_hcfa()
     kelamin = st.radio("Pilih Jenis Kelamin:", ('L', 'P'), format_func=lambda x: 'Laki-laki' if x == 'L' else 'Perempuan', key="hcfa_gender")
     umur_anak_bulan = st.number_input("Umur anak (bulan):", min_value=0.0, max_value=60.0, value=12.0, step=1.0, key="hcfa_age")
     hc_anak = st.number_input("Lingkar kepala anak (cm):", min_value=0.0, value=45.0, step=0.5, key="hcfa_hc")
 
-    if st.button("Buat Grafik HCFA", key="hcfa_button"):
+    if st.button("Tampilkan Kurva", key="hcfa_button"):
         try:
             settings = get_settings_hcfa(umur_anak_bulan)
             gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
