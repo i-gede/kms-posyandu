@@ -417,7 +417,7 @@ def plot_lhfa(kelamin, umur_anak, panjang_anak):
 def plot_hcfa(kelamin, umur_anak_bulan, hc_anak):
     st.subheader("5. Lingkar Kepala menurut Umur (HCFA)")
     try:
-        st.info(f"Keterangan: {interpretasi}")
+        st.info(f"Interpretasi: {interpretasi}")
         settings = get_settings_hcfa(umur_anak_bulan)
         gender_text = "Perempuan" if kelamin == 'P' else "Laki-laki"
         gender_file_key = 'girls' if kelamin == 'P' else 'boys'
