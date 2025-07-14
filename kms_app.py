@@ -102,6 +102,9 @@ def page_input_data():
         
         st.divider()
         
+        # --- PERUBAHAN 1: Menambahkan input Tanggal Pengukuran ---
+        tanggal_pengukuran = st.date_input("Tanggal Pengukuran", max_value=date.today())
+        
         berat_kg = st.number_input("Berat Badan (kg)", min_value=0.0, step=0.1, format="%.2f")
         tinggi_cm = st.number_input("Tinggi/Panjang Badan (cm)", min_value=0.0, step=0.5, format="%.1f")
         lingkar_kepala_cm = st.number_input("Lingkar Kepala (cm)", min_value=0.0, step=0.5, format="%.1f")
@@ -113,7 +116,7 @@ def page_input_data():
             else:
                 try:
                     today = date.today()
-                    usia_bulan = (today.year - tanggal_lahir.year) * 12 + (today.month - tanggal_lahir.month)
+                    usia_bulan = (tanggal_pengukuran.year - tanggal_lahir.year) * 12 + (today.month - tanggal_lahir.month)
                     data_to_insert = {"id_anak": id_anak, "nama_anak": nama_anak, "tanggal_lahir": str(tanggal_lahir), "jenis_kelamin": jenis_kelamin, "usia_bulan": int(usia_bulan), "berat_kg": berat_kg, "tinggi_cm": tinggi_cm, "lingkar_kepala_cm": lingkar_kepala_cm}
                     supabase.table("data_pengukuran").insert(data_to_insert).execute()
                     st.success(f"Data pengukuran untuk anak {nama_anak} berhasil disimpan!")
