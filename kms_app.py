@@ -201,7 +201,7 @@ def plot_all_curves(history_df):
     plot_hcfa(history_df)
 
 def plot_wfa(history_df):
-    st.subheader("1. Berat Badan menurut Umur (WfA)")
+    st.subheader("1. Berat Badan menurut Umur")
     try:
         latest_data = history_df.iloc[-1]
         kelamin, umur_terakhir, berat_terakhir = latest_data['jenis_kelamin'], float(latest_data['usia_bulan']), float(latest_data['berat_kg'])
@@ -218,7 +218,7 @@ def plot_wfa(history_df):
         poly_funcs = {col: np.poly1d(np.polyfit(x_original, df_std[col], 5)) for col in z_cols}
         z_scores_at_age = {col: func(umur_terakhir) for col, func in poly_funcs.items()}
         interpretasi, warna = get_interpretation_wfa(berat_terakhir, z_scores_at_age)
-        st.info(f"Interpretasi Terakhir: {interpretasi}")
+        st.info(f"Berat Badan: {interpretasi}")
         
         x_smooth = np.linspace(df_std['Month'].min(), df_std['Month'].max(), 500)
         smooth_data = {col: func(x_smooth) for col, func in poly_funcs.items()}
@@ -269,7 +269,7 @@ def plot_wfa(history_df):
     except Exception as e: st.error(f"Gagal membuat plot WfA: {e}")
 
 def plot_wfh(history_df):
-    st.subheader("2. Berat Badan menurut Tinggi/Panjang (WfH/L)")
+    st.subheader("2. Berat Badan menurut Tinggi/Panjang")
     try:
         latest_data = history_df.iloc[-1]
         kelamin, umur_terakhir, tinggi_terakhir, berat_terakhir = latest_data['jenis_kelamin'], float(latest_data['usia_bulan']), float(latest_data['tinggi_cm']), float(latest_data['berat_kg'])
@@ -284,7 +284,7 @@ def plot_wfh(history_df):
         poly_funcs = {col: np.poly1d(np.polyfit(x_original, df_std[col], 5)) for col in z_cols}
         z_scores_at_length = {col: poly_funcs[col](tinggi_terakhir) for col in z_cols}
         interpretasi, warna = get_interpretation_wfh(berat_terakhir, z_scores_at_length)
-        st.info(f"Status Gizi Terakhir: {interpretasi}")
+        st.info(f"Status Gizi: {interpretasi}")
         
         x_smooth = np.linspace(x_original.min(), x_original.max(), 500)
         smooth_data = {col: func(x_smooth) for col, func in poly_funcs.items()}
@@ -309,15 +309,16 @@ def plot_wfh(history_df):
     except Exception as e: st.error(f"Gagal membuat plot WfH: {e}")
 
 def plot_bmi(history_df):
-    st.subheader("3. Indeks Massa Tubuh (IMT) menurut Umur")
+    st.subheader("3. Indeks Massa Tubuh (IMT) Menurut Umur")
     try:
         latest_data = history_df.iloc[-1]
         kelamin, umur_terakhir, tinggi_terakhir, berat_terakhir = latest_data['jenis_kelamin'], float(latest_data['usia_bulan']), float(latest_data['tinggi_cm']), float(latest_data['berat_kg'])
         if tinggi_terakhir == 0: st.error("Tinggi badan nol, IMT tidak dapat dihitung."); return
         
         bmi_terakhir = berat_terakhir / ((tinggi_terakhir / 100) ** 2)
-        st.info(f"IMT Terakhir: {bmi_terakhir:.2f} kg/m²")
-        
+        st.info(f"IMT: {bmi_terakhir:.2f} kg/m² {(interpretasi)}")
+        st.info(f"Berat Badan: {interpretasi}")
+
         history_df['bmi'] = history_df['berat_kg'].astype(float) / ((history_df['tinggi_cm'].astype(float) / 100) ** 2)
         
         settings = get_settings_bmi(umur_terakhir)
@@ -356,7 +357,7 @@ def plot_bmi(history_df):
     except Exception as e: st.error(f"Gagal membuat plot BMI: {e}")
 
 def plot_lhfa(history_df):
-    st.subheader("4. Panjang/Tinggi Badan menurut Umur (L/H-f-A)")
+    st.subheader("4. Panjang/Tinggi Badan Menurut Umur")
     try:
         latest_data = history_df.iloc[-1]
         kelamin, umur_terakhir, panjang_terakhir = latest_data['jenis_kelamin'], float(latest_data['usia_bulan']), float(latest_data['tinggi_cm'])
@@ -379,7 +380,7 @@ def plot_lhfa(history_df):
         z_scores_at_age = {col: func(umur_terakhir) for col, func in poly_funcs.items()}
         z_scores_at_age['SD_2'] = z_scores_at_age.get('SD2neg'); z_scores_at_age['SD_3'] = z_scores_at_age.get('SD3neg')
         interpretasi, warna = get_interpretation_lhfa(panjang_terakhir, z_scores_at_age)
-        st.info(f"Interpretasi Status Stunting Terakhir: {interpretasi}")
+        st.info(f"Panjang/Tinggi Badan: {interpretasi}")
         
         x_smooth = np.linspace(x_original.min(), x_original.max(), 500)
         smooth_data = {col: func(x_smooth) for col, func in poly_funcs.items()}
@@ -401,7 +402,7 @@ def plot_lhfa(history_df):
     except Exception as e: st.error(f"Gagal membuat plot L/H-f-A: {e}")
 
 def plot_hcfa(history_df):
-    st.subheader("5. Lingkar Kepala menurut Umur (HCFA)")
+    st.subheader("5. Lingkar Kepala Menurut Umur")
     try:
         latest_data = history_df.iloc[-1]
         kelamin, umur_terakhir, hc_terakhir = latest_data['jenis_kelamin'], float(latest_data['usia_bulan']), float(latest_data['lingkar_kepala_cm'])
@@ -420,7 +421,7 @@ def plot_hcfa(history_df):
         poly_funcs = {col: np.poly1d(np.polyfit(x_original, df_to_process[col], 5)) for col in z_cols}
         z_scores_at_age = {col: func(umur_terakhir) for col, func in poly_funcs.items()}
         interpretasi, warna = get_interpretation_hcfa(hc_terakhir, z_scores_at_age)
-        st.info(f"Interpretasi Lingkar Kepala Terakhir: {interpretasi}")
+        st.info(f"Lingkar Kepala: {interpretasi}")
         
         x_smooth = np.linspace(0, 60, 500)
         smooth_data = {col: func(x_smooth) for col, func in poly_funcs.items()}
@@ -450,7 +451,7 @@ def plot_hcfa(history_df):
 # ==============================================================================
 
 st.set_page_config(page_title="Aplikasi KMS Posyandu", layout="wide")
-st.title("👶 Aplikasi KMS Posyandu Mawar - Lingkungan Karang Baru Utara")
+st.title("👶 Aplikasi KMS Posyandu Mawar - KBU")
 
 st.sidebar.title("Menu Navigasi")
 page_options = ["📝 Input Pengukuran Baru", "📊 Lihat Riwayat & Kelola Data"]
