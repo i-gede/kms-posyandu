@@ -116,7 +116,7 @@ def page_input_data():
             else:
                 try:
                     today = date.today()
-                    usia_bulan = (tanggal_pengukuran.year - tanggal_lahir.year) * 12 + (today.month - tanggal_lahir.month)
+                    usia_bulan = (tanggal_pengukuran.year - tanggal_lahir.year) * 12 + (tanggal_pengukuran.month - tanggal_lahir.month)
                     data_to_insert = {"id_anak": id_anak, "nama_anak": nama_anak, "tanggal_lahir": str(tanggal_lahir), "jenis_kelamin": jenis_kelamin, "usia_bulan": int(usia_bulan), "berat_kg": berat_kg, "tinggi_cm": tinggi_cm, "lingkar_kepala_cm": lingkar_kepala_cm}
                     supabase.table("data_pengukuran").insert(data_to_insert).execute()
                     st.success(f"Data pengukuran untuk anak {nama_anak} berhasil disimpan!")
