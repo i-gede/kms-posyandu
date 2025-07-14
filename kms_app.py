@@ -148,7 +148,7 @@ def page_view_history():
 
             history_df = pd.DataFrame(history_response.data)
             st.subheader(f"Riwayat Pengukuran untuk: {history_df['nama_anak'].iloc[0]}")
-            st.dataframe(history_df[['created_at', 'usia_bulan', 'berat_kg', 'tinggi_cm', 'lingkar_kepala_cm']])
+            st.dataframe(history_df[['created_at', 'usia_bulan', 'berat_kg', 'tinggi_cm', 'lingkar_kepala_cm', 'tanggal_pengukuran']])
             
             plot_all_curves(history_df)
             
@@ -450,7 +450,7 @@ def plot_hcfa(history_df):
 # ==============================================================================
 
 st.set_page_config(page_title="Aplikasi KMS Posyandu", layout="wide")
-st.title("👶 Aplikasi KMS Posyandu")
+st.title("👶 Aplikasi KMS Posyandu Mawar - Lingkungan Karang Baru Utara")
 
 st.sidebar.title("Menu Navigasi")
 page_options = ["📝 Input Pengukuran Baru", "📊 Lihat Riwayat & Kelola Data"]
