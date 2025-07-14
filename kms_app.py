@@ -93,35 +93,92 @@ def page_input_data():
     st.header("📝 Input Pengukuran Baru")
     if not supabase: return
 
-    with st.form("data_form", clear_on_submit=True):
-        st.write("Masukkan data anak dan hasil pengukuran:")
-        id_anak = st.text_input("ID Anak (contoh: NIK, No. KMS)", help="ID unik untuk setiap anak.")
-        nama_anak = st.text_input("Nama Anak")
-        tanggal_lahir = st.date_input("Tanggal Lahir", max_value=date.today(), value=date(2023, 1, 1))
-        jenis_kelamin = st.radio("Jenis Kelamin", ('L', 'P'), format_func=lambda x: 'Laki-laki' if x == 'L' else 'Perempuan')
-        
-        st.divider()
-        
-        # --- PERUBAHAN 1: Menambahkan input Tanggal Pengukuran ---
-        tanggal_pengukuran = st.date_input("Tanggal Pengukuran", max_value=date.today())
-        
-        berat_kg = st.number_input("Berat Badan (kg)", min_value=0.0, step=0.1, format="%.2f")
-        tinggi_cm = st.number_input("Tinggi/Panjang Badan (cm)", min_value=0.0, step=0.5, format="%.1f")
-        lingkar_kepala_cm = st.number_input("Lingkar Kepala (cm)", min_value=0.0, step=0.5, format="%.1f")
-        
-        submitted = st.form_submit_button("Simpan Data Pengukuran")
-        if submitted:
-            if not all([id_anak, nama_anak, berat_kg > 0, tinggi_cm > 0]):
-                st.warning("Harap isi semua field yang wajib (ID, Nama, Tanggal Lahir, Berat, Tinggi).")
-            else:
-                try:
-                    today = date.today()
-                    usia_bulan = (tanggal_pengukuran.year - tanggal_lahir.year) * 12 + (tanggal_pengukuran.month - tanggal_lahir.month)
-                    data_to_insert = {"id_anak": id_anak, "nama_anak": nama_anak, "tanggal_lahir": str(tanggal_lahir), "jenis_kelamin": jenis_kelamin, "usia_bulan": int(usia_bulan), "berat_kg": berat_kg, "tinggi_cm": tinggi_cm, "lingkar_kepala_cm": lingkar_kepala_cm}
-                    supabase.table("data_pengukuran").insert(data_to_insert).execute()
-                    st.success(f"Data pengukuran untuk anak {nama_anak} berhasil disimpan!")
-                except Exception as e:
-                    st.error(f"Gagal menyimpan data ke Supabase: {e}")
+    # --- PERUBAHAN UTAMA: Menambahkan pilihan jenis input ---
+    input_type = st.radio(
+        "Pilih jenis input:",
+        ('Anak yang Sudah Terdaftar', 'Daftarkan Anak Baru'),
+        horizontal=True,
+        label_visibility="collapsed"
+    )
+
+    # --- ALUR KERJA BARU UNTUK ANAK TERDAFTAR ---
+    if input_type == 'Anak yang Sudah Terdaftar':
+        try:
+            response = supabase.table("data_pengukuran").select("id_anak, nama_anak, tanggal_lahir, jenis_kelamin").execute()
+            if not response.data:
+                st.warning("Belum ada data anak yang terdaftar. Silakan daftarkan anak baru terlebih dahulu.")
+                return
+
+            df_anak = pd.DataFrame(response.data).drop_duplicates(subset=['id_anak'])
+            df_anak['display_name'] = df_anak['nama_anak'] + " (" + df_anak['id_anak'] + ")"
+            
+            option_list = ["-"] + sorted(df_anak['display_name'].tolist())
+            selected_display_name = st.selectbox("Pilih Anak:", option_list)
+
+            if selected_display_name and selected_display_name != "-":
+                selected_child_data = df_anak[df_anak['display_name'] == selected_display_name].iloc[0]
+                
+                with st.form("existing_child_form", clear_on_submit=True):
+                    st.write("Data Anak (tidak bisa diubah):")
+                    st.text_input("ID Anak", value=selected_child_data['id_anak'], disabled=True)
+                    st.text_input("Nama Anak", value=selected_child_data['nama_anak'], disabled=True)
+                    
+                    st.divider()
+                    st.write("Masukkan data pengukuran baru:")
+                    tanggal_pengukuran = st.date_input("Tanggal Pengukuran", max_value=date.today())
+                    berat_kg = st.number_input("Berat Badan (kg)", min_value=0.0, step=0.1, format="%.2f")
+                    tinggi_cm = st.number_input("Tinggi/Panjang Badan (cm)", min_value=0.0, step=0.5, format="%.1f")
+                    lingkar_kepala_cm = st.number_input("Lingkar Kepala (cm)", min_value=0.0, step=0.5, format="%.1f")
+
+                    submitted = st.form_submit_button("Simpan Pengukuran")
+                    if submitted:
+                        if not all([berat_kg > 0, tinggi_cm > 0]):
+                            st.warning("Harap isi data pengukuran (Berat dan Tinggi).")
+                        else:
+                            try:
+                                tanggal_lahir_dt = datetime.strptime(selected_child_data['tanggal_lahir'], '%Y-%m-%d').date()
+                                usia_bulan = (tanggal_pengukuran.year - tanggal_lahir_dt.year) * 12 + (tanggal_pengukuran.month - tanggal_lahir_dt.month)
+                                data_to_insert = {
+                                    "id_anak": selected_child_data['id_anak'], "nama_anak": selected_child_data['nama_anak'],
+                                    "tanggal_lahir": str(tanggal_lahir_dt), "jenis_kelamin": selected_child_data['jenis_kelamin'],
+                                    "tanggal_pengukuran": str(tanggal_pengukuran), "usia_bulan": int(usia_bulan), 
+                                    "berat_kg": berat_kg, "tinggi_cm": tinggi_cm, "lingkar_kepala_cm": lingkar_kepala_cm
+                                }
+                                supabase.table("data_pengukuran").insert(data_to_insert).execute()
+                                st.success(f"Data pengukuran baru untuk {selected_child_data['nama_anak']} berhasil disimpan!")
+                            except Exception as e:
+                                st.error(f"Gagal menyimpan data: {e}")
+        except Exception as e:
+            st.error(f"Gagal mengambil daftar anak: {e}")
+
+    # --- ALUR KERJA UNTUK ANAK BARU (SEPERTI SEBELUMNYA) ---
+    elif input_type == 'Daftarkan Anak Baru':
+        with st.form("new_child_form", clear_on_submit=True):
+            st.write("Masukkan data anak dan hasil pengukuran pertama:")
+            id_anak = st.text_input("ID Anak (contoh: NIK, No. KMS)", help="ID unik untuk setiap anak.")
+            nama_anak = st.text_input("Nama Anak")
+            tanggal_lahir = st.date_input("Tanggal Lahir", max_value=date.today(), value=date(2023, 1, 1))
+            jenis_kelamin = st.radio("Jenis Kelamin", ('L', 'P'), format_func=lambda x: 'Laki-laki' if x == 'L' else 'Perempuan')
+            
+            st.divider()
+            
+            tanggal_pengukuran = st.date_input("Tanggal Pengukuran", max_value=date.today())
+            berat_kg = st.number_input("Berat Badan (kg)", min_value=0.0, step=0.1, format="%.2f")
+            tinggi_cm = st.number_input("Tinggi/Panjang Badan (cm)", min_value=0.0, step=0.5, format="%.1f")
+            lingkar_kepala_cm = st.number_input("Lingkar Kepala (cm)", min_value=0.0, step=0.5, format="%.1f")
+            
+            submitted = st.form_submit_button("Daftarkan dan Simpan Pengukuran")
+            if submitted:
+                if not all([id_anak, nama_anak, berat_kg > 0, tinggi_cm > 0]):
+                    st.warning("Harap isi semua field yang wajib (ID, Nama, Tanggal Lahir, Berat, Tinggi).")
+                else:
+                    try:
+                        usia_bulan = (tanggal_pengukuran.year - tanggal_lahir.year) * 12 + (tanggal_pengukuran.month - tanggal_lahir.month)
+                        data_to_insert = {"id_anak": id_anak, "nama_anak": nama_anak, "tanggal_lahir": str(tanggal_lahir), "jenis_kelamin": jenis_kelamin, "tanggal_pengukuran": str(tanggal_pengukuran), "usia_bulan": int(usia_bulan), "berat_kg": berat_kg, "tinggi_cm": tinggi_cm, "lingkar_kepala_cm": lingkar_kepala_cm}
+                        supabase.table("data_pengukuran").insert(data_to_insert).execute()
+                        st.success(f"Anak baru bernama {nama_anak} berhasil didaftarkan dan data pengukurannya disimpan!")
+                    except Exception as e:
+                        st.error(f"Gagal menyimpan data: {e}")
 
 def page_view_history():
     st.header("📊 Lihat Riwayat & Kelola Data")
