@@ -148,7 +148,7 @@ def page_view_history():
 
             history_df = pd.DataFrame(history_response.data)
             st.subheader(f"Riwayat Pengukuran untuk: {history_df['nama_anak'].iloc[0]}")
-            st.dataframe(history_df[['tanggal_pengukuran', 'usia_bulan', 'berat_kg', 'tinggi_cm', 'lingkar_kepala_cm', , 'lingkar_lengan_cm']])
+            st.dataframe(history_df[['tanggal_pengukuran', 'usia_bulan', 'berat_kg', 'tinggi_cm', 'lingkar_kepala_cm', 'lingkar_lengan_cm']])
             
             plot_all_curves(history_df)
             
