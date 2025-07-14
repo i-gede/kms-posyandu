@@ -282,7 +282,7 @@ def plot_wfh(history_df):
         df_std = df_std.rename(columns={x_col_name: 'PanjangTinggi'}).sort_values(by='PanjangTinggi').drop_duplicates(subset='PanjangTinggi')
         x_original, z_cols = df_std['PanjangTinggi'], ['SD3neg', 'SD2neg', 'SD1neg', 'SD0', 'SD1', 'SD2', 'SD3']
         poly_funcs = {col: np.poly1d(np.polyfit(x_original, df_std[col], 5)) for col in z_cols}
-        z_scores_at_length = {col: func(tinggi_terakhir) for col in z_cols}
+        z_scores_at_length = {col: poly_funcs[col](tinggi_terakhir) for col in z_cols}
         interpretasi, warna = get_interpretation_wfh(berat_terakhir, z_scores_at_length)
         st.info(f"Status Gizi Terakhir: {interpretasi}")
         
