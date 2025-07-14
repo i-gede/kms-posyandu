@@ -316,8 +316,7 @@ def plot_bmi(history_df):
         if tinggi_terakhir == 0: st.error("Tinggi badan nol, IMT tidak dapat dihitung."); return
         
         bmi_terakhir = berat_terakhir / ((tinggi_terakhir / 100) ** 2)
-        st.info(f"IMT: {bmi_terakhir:.2f} kg/m² {(interpretasi)}")
-        st.info(f"Berat Badan: {interpretasi}")
+        st.info(f"IMT: {bmi_terakhir:.2f} kg/m²")
 
         history_df['bmi'] = history_df['berat_kg'].astype(float) / ((history_df['tinggi_cm'].astype(float) / 100) ** 2)
         
@@ -333,6 +332,8 @@ def plot_bmi(history_df):
         poly_funcs = {col: np.poly1d(np.polyfit(x_original, df_std[col], 5)) for col in z_cols}
         z_scores_at_age = {col: func(umur_terakhir) for col, func in poly_funcs.items()}
         interpretasi, warna = get_interpretation_bmi(bmi_terakhir, z_scores_at_age)
+
+        st.info(f"Berat Badan: {interpretasi}")
         
         x_smooth = np.linspace(0, 60, 500)
         smooth_data = {col: func(x_smooth) for col, func in poly_funcs.items()}
