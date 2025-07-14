@@ -3,3 +3,4 @@ matplotlib
 numpy
 streamlit
 openpyxl  # Dibutuhkan pandas untuk membaca file .xlsx
+supabase
