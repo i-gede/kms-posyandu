@@ -19,22 +19,12 @@ CONFIG: Dict[str, Dict[str, Any]] = {
         "y_col": "berat_kg",
         "y_label": "Berat Badan (kg)",
         "interpretation_func": lambda berat, z: get_interpretation_wfa(berat, z),
-        # Definisikan nama file Anda secara langsung
-        "file_boy": "wfa-boys-zscore-expanded-tables(WFA_boys_z_exp_0_5).csv",
-        "file_girl": "wfa-girls-zscore-expanded-tables(WFA_girls_z_exp_0_5).csv",
-        
-        # Pemetaan AKURAT dari kolom di file Anda ke nama standar yang kode gunakan
-        "column_mapping": {
-            'x_std': 'Day',     # Kolom umur di file Anda adalah 'Day'
-            'SD0': 'SD0',       # Kolom median (SD0). Bisa juga 'M', tapi 'SD0' lebih konsisten.
-            'SD1': 'SD1',
-            'SD2': 'SD2',
-            'SD3': 'SD3',
-            'SD1neg': 'SD1neg',
-            'SD2neg': 'SD2neg',
-            'SD3neg': 'SD3neg'
-        },
-        #"file_pattern": "wfa_{gender}_{age_group}_zscores.xlsx",
+        "ranges": [
+            {"max_age": 24, "xlim": (0, 24), "ylim": (0, 18), "x_major": 1, "y_major": 1, "age_range_label": "0-24 Bulan"},
+            {"max_age": 60, "xlim": (24, 60), "ylim": (7, 30), "x_major": 1, "y_major": 1, "age_range_label": "24-60 Bulan"},
+            {"max_age": 121, "xlim": (60, 120), "ylim": (10, 60), "x_major": 12, "y_major": 5, "age_range_label": "5-10 Tahun"},
+        ],
+        "file_pattern": "wfa_{gender}_{age_group}_zscores.xlsx",
         "x_axis_label": "Umur (Bulan)",
     },
     "wfh": {
@@ -212,22 +202,7 @@ def create_growth_chart(ax: plt.Axes, chart_type: str, history_df: pd.DataFrame,
     if df_std is None: return
     
     # 3. Proses data standar dan hitung Z-scores
-    if 'column_mapping' in cfg:
-        rename_map = {v: k for k, v in cfg['column_mapping'].items()}
-        df_std = df_std.rename(columns=rename_map)
-        
-        # TAMBAHKAN BARIS INI: Konversi kolom umur dari HARI ke BULAN
-        # Faktor 30.4375 adalah rata-rata hari dalam sebulan (365.25 / 12)
-        if 'Day' in rename_map: # Hanya lakukan jika sumbernya adalah 'Day'
-            df_std['x_std'] = df_std['x_std'] / 30.4375
-
-    else: # Fallback untuk kurva lain yang pakai nama standar
-        x_col_std = "Month" if is_age_based else range_cfg["x_col_std"]
-        df_std = df_std.rename(columns={x_col_std: 'x_std'})
-
-    df_std = df_std.sort_values('x_std').drop_duplicates('x_std')
-
-    #df_std = df_std.rename(columns={x_col_std: 'x_std'}).sort_values('x_std').drop_duplicates('x_std')
+    df_std = df_std.rename(columns={x_col_std: 'x_std'}).sort_values('x_std').drop_duplicates('x_std')
     z_cols = ['SD3neg', 'SD2neg', 'SD1neg', 'SD0', 'SD1', 'SD2', 'SD3']
     poly_funcs = {col: np.poly1d(np.polyfit(df_std['x_std'], df_std[col], 5)) for col in z_cols}
     z_scores_at_point = {col: func(x_latest) for col, func in poly_funcs.items()}
