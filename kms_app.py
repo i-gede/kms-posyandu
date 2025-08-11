@@ -267,12 +267,12 @@ def plot_all_curves(history_df: pd.DataFrame):
         st.warning("Data riwayat tidak tersedia untuk membuat grafik.")
         return
 
-    latest_data = history_df.iloc[-1]
-    gender = latest_data['jenis_kelamin']
-    
     # Tambah kolom BMI jika belum ada
     if 'bmi' not in history_df.columns:
         history_df['bmi'] = history_df.apply(lambda row: calculate_bmi(row['berat_kg'], row['tinggi_cm']), axis=1)
+
+    latest_data = history_df.iloc[-1]
+    gender = latest_data['jenis_kelamin']
 
     charts_to_plot = ["wfa", "wfh", "bmi", "lhfa", "hcfa"]
     for chart_type in charts_to_plot:
