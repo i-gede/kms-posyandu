@@ -24,7 +24,7 @@ CONFIG: Dict[str, Dict[str, Any]] = {
             {"max_age": 60, "xlim": (24, 60), "ylim": (7, 30), "x_major": 1, "y_major": 1, "age_range_label": "24-60 Bulan"},
             {"max_age": 121, "xlim": (60, 120), "ylim": (10, 60), "x_major": 12, "y_major": 5, "age_range_label": "5-10 Tahun"},
         ],
-        "file_pattern": "wfa_{gender}_{age_group}_zscores.xlsx",
+        "file_pattern": "wfa_{gender}_0-to-5-years_zscores.xlsx",
         "x_axis_label": "Umur (Bulan)",
     },
     "wfh": {
