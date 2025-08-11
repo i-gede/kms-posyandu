@@ -72,7 +72,7 @@ CONFIG: Dict[str, Dict[str, Any]] = {
             {"max_age": 24, "xlim": (0, 24), "ylim": (32, 52), "x_major": 1, "y_major": 1, "age_range_label": "0-24 Bulan"},
             {"max_age": 61, "xlim": (24, 60), "ylim": (42, 56), "x_major": 2, "y_major": 1, "age_range_label": "2-5 Tahun"},
         ],
-        "file_pattern": "hcfa_{gender}_0-to-5-years_zscores.xlsx",
+        "file_pattern": "hcfa_girls_0-to-5-years_zscores.xlsx",
         "x_axis_label": "Umur (Bulan)",
     },
 }
