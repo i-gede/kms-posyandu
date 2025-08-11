@@ -8,21 +8,20 @@ from matplotlib.ticker import MultipleLocator
 # FUNGSI-FUNGSI UNTUK KURVA BERAT BADAN vs UMUR (WfA)
 # ==============================================================================
 
-""" def get_input_wfa():
-    """Meminta input untuk kurva Berat Badan vs Umur."""
-    while True:
-        kelamin = input("Masukkan jenis kelamin anak (L/P): ").upper()
-        if kelamin in ['L', 'P']: break
-        print("Input tidak valid. Harap masukkan 'L' atau 'P'.")
+# def get_input_wfa():
+#     while True:
+#         kelamin = input("Masukkan jenis kelamin anak (L/P): ").upper()
+#         if kelamin in ['L', 'P']: break
+#         print("Input tidak valid. Harap masukkan 'L' atau 'P'.")
     
-    umur_str = input(f"Umur anak {'laki-laki' if kelamin == 'L' else 'perempuan'} (bulan): ")
-    berat_str = input("Berat badan anak (kg): ")
+#     umur_str = input(f"Umur anak {'laki-laki' if kelamin == 'L' else 'perempuan'} (bulan): ")
+#     berat_str = input("Berat badan anak (kg): ")
     
-    umur = float(umur_str)
-    if not (0 <= umur <= 120):
-        raise ValueError("Usia harus berada dalam rentang 0 hingga 120 bulan atau 10 tahun.")
+#     umur = float(umur_str)
+#     if not (0 <= umur <= 120):
+#         raise ValueError("Usia harus berada dalam rentang 0 hingga 120 bulan atau 10 tahun.")
         
-    return kelamin, umur, float(berat_str) """
+#     return kelamin, umur, float(berat_str)
 
 def get_settings_wfa(age_in_months):
     """Menentukan pengaturan plot untuk WfA berdasarkan usia."""
